@@ -13,12 +13,38 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  detect-secrets:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: GitGuardian Secrets scan
+        uses: GitGuardian/ggshield/actions/secret@main
+        env:
+          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
+  sbom-scan:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Generate Python SBOM
+      uses: CycloneDX/gh-python-generate-sbom@v2
+      id: sbom-scan
+      with:
+        input: ./requirements.txt
+        output: ./bom.json
+        format: json
+    - name: View Scan Report
+      if: always()
+      run: cat ${{ steps.sbom-scan.outputs.sarif }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [ detect-secrets, sbom-scan ]
+    steps:
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
