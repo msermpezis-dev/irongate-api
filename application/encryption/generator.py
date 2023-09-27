@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
-from encryption.wordlist import WordList
+from application.encryption.wordlist import WordList
 import os
 import base64
 class Generator:

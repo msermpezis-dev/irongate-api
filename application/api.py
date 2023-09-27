@@ -3,8 +3,8 @@ from encryption.keys import Keys
 from encryption.encryptor import Encryptor
 from encryption.decryptor import Decryptor
 from encryption.generator import Generator
-from database.db import Database
-from email_plus import Email
+from application.database.db import Database
+from email_plus.email import Email
 
 # h@h.he, h@h.he, diesel frost future face dad goddess flee today tail version bullet miracle
 
@@ -79,6 +79,14 @@ def MPRegisterCheck(salt, iv, mcvalue, mp):
         return True
     else:
         return False
+
+
+@app.route('/check', methods=['POST'])
+def Check():
+    db = Database()
+    postedData = request.get_json()
+    return dict(exists=db.check_if_email_exists(postedData['email']))
+
 
 
 @app.route('/login', methods=['POST'])
