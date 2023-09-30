@@ -38,8 +38,7 @@ jobs:
         output: ./bom.json
         format: json
     - name: View Scan Report
-      if: always()
-      run: cat ${{ steps.sbom-scan.outputs.sarif }}
+      run: cat ./bom.json
 
   build:
     runs-on: ubuntu-latest
