@@ -37,8 +37,14 @@ jobs:
         input: ./requirements.txt
         output: ./bom.json
         format: json
+    - name: Scan SBOM
+      id: scan
+      uses: anchore/scan-action@v3
+      with:
+        sbom: "./bom.json"
+        fail-build: false
     - name: View Scan Report
-      run: cat ./bom.json
+      run: cat ${{ steps.scan.outputs.sarif }}
 
   build:
     runs-on: ubuntu-latest
