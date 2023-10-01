@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import random
-from application.encryption.wordlist import WordList
 import os
 import base64
+from .wordlist import WordList
+
+
 class Generator:
 
     def getNewSalt(self):

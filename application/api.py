@@ -3,7 +3,7 @@ from encryption.keys import Keys
 from encryption.encryptor import Encryptor
 from encryption.decryptor import Decryptor
 from encryption.generator import Generator
-from application.database.db import Database
+from database.db import Database
 from email_plus.email import Email
 
 # h@h.he, h@h.he, diesel frost future face dad goddess flee today tail version bullet miracle
@@ -86,7 +86,6 @@ def Check():
     db = Database()
     postedData = request.get_json()
     return dict(exists=db.check_if_email_exists(postedData['email']))
-
 
 
 @app.route('/login', methods=['POST'])
@@ -181,6 +180,7 @@ def Entities():
             return {'Status Code': -1}
     else:
         return {'Status Code': -1}
+
 
 @app.route('/addentity', methods=['POST'])
 def AddEntity():
@@ -339,5 +339,5 @@ def SendEmail():
 
 
 if __name__ == "__main__":
-    context = ('keys\cert.pem', 'keys\key.pem')
-    app.run(host='127.0.0.1', port='5000', debug=True, ssl_context=context)
+    context = ('keys/cert.pem', 'keys/key.pem')
+    app.run(host='0.0.0.0', port=8080, debug=True, ssl_context=context)

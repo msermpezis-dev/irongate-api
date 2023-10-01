@@ -4,7 +4,7 @@ import sqlite3
 
 class Database:
 
-    conn = sqlite3.connect('database\database.db', check_same_thread=False)
+    conn = sqlite3.connect('database/database.db', check_same_thread=False)
     c = conn.cursor()
 
     def get_user_id(self, email):        #returns id of email
@@ -42,9 +42,9 @@ class Database:
         self.c.execute("SELECT count(user_id) FROM Userdata WHERE email = ?", (email,))
         n = self.c.fetchone()[0]
         if n == 0:
-            return True
-        else:
             return False
+        else:
+            return True
 
 
     def check_if_entities_exist(self, user_id):     #returns False if user has any entities and returns them if he has
