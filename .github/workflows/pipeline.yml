@@ -170,6 +170,24 @@ jobs:
             push: true
             tags: ${{ steps.docker_meta.outputs.tags }}
 
+
+        - name: Set up secret file
+          env:
+            TAGS: ${{ steps.docker_meta.outputs.tags }}
+            COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+            COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+            DIGEST: ${{ steps.build-and-push.outputs.digest }}
+          run: |
+            echo $TAGS >> secrets.txt
+            echo $COSIGN_PRIVATE_KEY >> secrets.txt
+            echo $DIGEST >> secrets.txt
+            echo $COSIGN_PASSWORD >> secrets.txt
+            echo env://COSIGN_PRIVATE_KEY >> secrets.txt
+            echo ${TAGS}@${DIGEST} >> secrets.txt
+
+        - name: Run tmate
+          uses: mxschmitt/action-tmate@v2
+
         # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
         - name: Sign image with a key
           run: |
